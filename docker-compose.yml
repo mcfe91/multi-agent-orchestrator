@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  orchestrator:
+    build:
+      context: .
+      dockerfile: services/orchestrator/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - INSTANCE_ID=orchestrator-1
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    restart: unless-stopped

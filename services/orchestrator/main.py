@@ -1,4 +1,5 @@
 import json
+import socket
 import uuid
 import logging
 import os
@@ -11,6 +12,8 @@ from langgraph.graph import StateGraph, END
 from pydantic import BaseModel
 import redis.asyncio as redis
 from dotenv import load_dotenv
+
+from shared.models import AgentState, ChatRequest, ChatResponse
 
 load_dotenv(override=True)
 
@@ -28,18 +31,6 @@ redis_client = redis.Redis(
     port=int(os.getenv('REDIS_PORT', 6379)),
     decode_responses=True
 )
-
-class ChatRequest(BaseModel):
-    message: str
-    session_id: str
-
-class ChatResponse(BaseModel):
-    response: str
-    session_id: str
-
-class AgentState(TypedDict):
-    messages: list
-    result: str
 
 class AgentOrchestrator:
     def __init__(self, instance_id):

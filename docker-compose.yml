@@ -1,10 +1,23 @@
 services:
-  orchestrator:
+  router:
+    build:
+      context: .
+      dockerfile: services/router/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  orchestrator-1:
     build:
       context: .
       dockerfile: services/orchestrator/Dockerfile
     ports:
-      - "8000:8000"
+      - "8001:8000"
     environment:
       - INSTANCE_ID=orchestrator-1
       - OPENAI_API_KEY=${OPENAI_API_KEY}
@@ -13,7 +26,22 @@ services:
     depends_on:
       - redis
     restart: unless-stopped
-  
+
+  orchestrator-2:
+    build:
+      context: .
+      dockerfile: services/orchestrator/Dockerfile
+    ports:
+      - "8002:8000"
+    environment:
+      - INSTANCE_ID=orchestrator-2
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    restart: unless-stopped
+
   redis:
     image: redis:7-alpine
     ports:

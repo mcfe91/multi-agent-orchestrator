@@ -88,6 +88,10 @@ class AgentRouter:
         # TODO: handle redis failures
 
         return selected_instance
+    
+    async def health_check_all(self):
+        for instance in self.instances:
+            await instance.health_check()
 
 router = AgentRouter()
 
@@ -107,3 +111,13 @@ async def route_request(request: RouteRequest):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@app.get("/health")
+async def health_check():
+    await router.health_check_all()
+    healthy_count = sum(1 for i in router.instances if i.healthy)
+    return {
+        "status": "healthy" if healthy_count > 0 else "unhealthy",
+        "healthy_orchestrator_agents": healthy_count,
+        "total_orchestrator_agents": len(router.instances)
+    }

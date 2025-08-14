@@ -126,3 +126,11 @@ async def chat(request: ChatRequest):
     except Exception as e:
         logger.error(f"Error processing session {request.session_id}: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+    
+@app.get("/health")
+async def health_check():
+    try:
+        redis_client.ping()
+        return {"status": "healthy", "redis": "connected"}
+    except:
+        return {"status": "unhealthy", "redis": "disconnected"}

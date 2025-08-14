@@ -10,7 +10,7 @@ import httpx
 from fastapi import FastAPI, HTTPException
 import redis.asyncio as redis
 
-from shared.models import ChatRequest, RouteRequest
+from shared.models import RouteRequest
 
 load_dotenv(override=True)
 

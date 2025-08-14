@@ -1,3 +1,9 @@
+# TODO:
+- Implement planner/executor nodes with dynamic graph generation in agent orchestrator
+- Separate dependencies per service
+- Implement sub-agent services
+- Add sub-agent service discovery 
+
 # API Test Command
 
 ```bash
